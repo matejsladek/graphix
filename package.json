@@ -13,7 +13,7 @@
   "scripts": {
     "build": "./node_modules/.bin/babel -d dist src/",
     "install": "node-pre-gyp install --fallback-to-build",
-    "test": "node --napi-modules ./node_modules/.bin/jest",
+    "test": "./node_modules/.bin/jest",
     "prepublish": "npm run test && npm run build"
   },
   "repository": {
@@ -31,6 +31,7 @@
   },
   "homepage": "https://github.com/matejsladek/graphix#readme",
   "dependencies": {
+    "es-collections": "0.0.2",
     "node-addon-api": "^0.5.1",
     "node-pre-gyp": "^0.6.36"
   },

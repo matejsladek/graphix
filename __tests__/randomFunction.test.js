@@ -1,7 +1,6 @@
 import { randomFunction, randomFunctionAsync, hello } from '../src/index'
 
 test('test randomFunction', () => {
-  console.log("asd");
   expect(randomFunction()).toEqual([9, 25]);
 });
 

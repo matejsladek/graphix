@@ -1,4 +1,6 @@
-require("babel-polyfill");
+import "babel-polyfill";
+import Graph from './Graph';
+import dijkstra from './dijkstra';
 
 function randomFunction() {
   const values = [3, 5];
@@ -16,8 +18,5 @@ const binding_path = binary.find(path.resolve(path.join(__dirname,'../package.js
 const binding = require(binding_path);
 const hello = binding.hello;
 
-import Graph from './Graph';
 
-// const Graph = require('./Graph').default;
-
-export { hello, randomFunction, randomFunctionAsync, Graph };
+export { hello, randomFunction, randomFunctionAsync, Graph, dijkstra };

@@ -1,13 +1,13 @@
-export default class Graph {
-  constructor(directed = false){
+class Graph {
+  constructor(directed = true){
     this.directed = directed;
-    this.edges = {};
+    this.edges = new Map();
   }
 
   createEdge(vertexA, vertexB, value){
-    if(!(vertexA in this.edges)) this.edges[vertexA] = {};
-    if(vertexB in this.edges[vertexA]) this.edges[vertexA][vertexB].push(value);
-    else this.edges[vertexA][vertexB] = [value];
+    if(!this.edges.has(vertexA)) this.edges.set(vertexA, new Map());
+    if(this.edges.get(vertexA).has(vertexB)) this.edges.get(vertexA).get(vertexB).push(value);
+    else this.edges.get(vertexA).set(vertexB, [value]);
   }
 
   addEgde(vertexA, vertexB, value){
@@ -15,3 +15,5 @@ export default class Graph {
     if(!this.directed) this.createEdge(vertexB, vertexA, value);
   }
 }
+
+export default Graph;
