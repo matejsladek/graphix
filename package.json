@@ -2,10 +2,30 @@
   "name": "graphix",
   "version": "0.0.1",
   "description": "graphs",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "./node_modules/.bin/babel -d dist src/",
+    "test": "exit 0",
+    "prepublish": "npm run test && npm run build"
   },
-  "author": "Matej Sladek",
-  "license": "ISC"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matejsladek/graphix"
+  },
+  "keywords": [
+    "es6",
+    "graphs"
+  ],
+  "author": "Matej Sladek <matejsladek10@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/matejsladek/graphix/issues"
+  },
+  "homepage": "https://github.com/matejsladek/graphix#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1"
+  }
 }
