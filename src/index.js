@@ -5,6 +5,11 @@ function randomFunction() {
   return values.map(a => a*a);
 }
 
+async function randomFunctionAsync() {
+  const values = [3, 5];
+  return values.map(a => a*a);
+}
+
 const binary = require('node-pre-gyp');
 const path = require('path');
 const binding_path = binary.find(path.resolve(path.join(__dirname,'../package.json')));
@@ -15,6 +20,4 @@ import Graph from './Graph';
 
 // const Graph = require('./Graph').default;
 
-export { hello, randomFunction, Graph };
-
-require('assert').equal(binding.hello(), "world");
+export { hello, randomFunction, randomFunctionAsync, Graph };
