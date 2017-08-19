@@ -11,6 +11,10 @@ const binding_path = binary.find(path.resolve(path.join(__dirname,'../package.js
 const binding = require(binding_path);
 const hello = binding.hello;
 
-export { hello, randomFunction };
+import Graph from './Graph';
+
+// const Graph = require('./Graph').default;
+
+export { hello, randomFunction, Graph };
 
 require('assert').equal(binding.hello(), "world");
