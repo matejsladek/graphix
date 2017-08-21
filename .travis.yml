@@ -19,11 +19,11 @@ before_install:
 # install aws-sdk so it is available for publishing
 - npm install aws-sdk
 # figure out if we should publish
-- PUBLISH_BINARY=true
+#- PUBLISH_BINARY=true
 # if we are building a tag then publish
-- if [[ $TRAVIS_BRANCH == `git describe --tags --always HEAD` ]]; then PUBLISH_BINARY=true; fi;
+#- if [[ $TRAVIS_BRANCH == `git describe --tags --always HEAD` ]]; then PUBLISH_BINARY=true; fi;
 # or if we put [publish binary] in the commit message
-- if test "${COMMIT_MESSAGE#*'[publish binary]'}" != "$COMMIT_MESSAGE"; then PUBLISH_BINARY=true; fi;
+#- if test "${COMMIT_MESSAGE#*'[publish binary]'}" != "$COMMIT_MESSAGE"; then PUBLISH_BINARY=true; fi;
 
 install:
 # ensure source install works
@@ -33,7 +33,8 @@ install:
 
 before_script:
 # if publishing, do it
-- if [[ $PUBLISH_BINARY == true ]]; then node-pre-gyp package publish; fi;
+#- if [[ $PUBLISH_BINARY == true ]]; then node-pre-gyp package publish; fi;
+- ./scripts/publish.sh
 # cleanup
 - node-pre-gyp clean
 - node-gyp clean
