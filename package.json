@@ -13,7 +13,7 @@
   "scripts": {
     "build": "./node_modules/.bin/babel -d dist src/",
     "install": "node-pre-gyp install --fallback-to-build",
-    "test": "./node_modules/.bin/jest",
+    "test": "node -v | grep v8 && node --napi-modules node_modules/jest/bin/jest.js; node -v | grep v8 || node node_modules/jest/bin/jest.js",
     "prepublish": "npm run test && npm run build"
   },
   "repository": {
