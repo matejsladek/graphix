@@ -4,7 +4,7 @@ function dijkstra(graph, vertexFrom, vertexTo){
   const start = graph.getNode(vertexFrom).__id__;
   const finish = graph.getNode(vertexTo).__id__;
   const marked = new Set();
-  let pq = new PriorityQueue((a, b) => a.dist - b.dist);
+  const pq = new PriorityQueue((a, b) => a.dist - b.dist);
   const edges = graph.edges;
   pq.add({name: start, dist: 0});
   while(pq.size !== 0){

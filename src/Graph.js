@@ -8,8 +8,8 @@ class Graph {
     this.highestNodeId = 0;
     this.edges = new Map();
     this.highestEdgeId = 0;
-    this.nodeDefaultLabel = "";
-    this.edgeDefaultLabel = "";
+    this.nodeDefaultLabel = '';
+    this.edgeDefaultLabel = '';
   }
 
   addNode(name, label = this.nodeDefaultLabel){
@@ -27,7 +27,7 @@ class Graph {
 
   getNodes(){
     const nodes = [];
-    for(const id in nodes.keys()){
+    for(const id of nodes.keys()){
       nodes.push(this.getNodeById(id));
     }
     return nodes;
@@ -38,15 +38,15 @@ class Graph {
       __id__: this.nodeToId.get(name),
       name,
       label: this.nodes.get(name),
-    }
+    };
   }
 
   getNodeById(id) {
     return {
       __id__: id,
       name: this.idToNode.get(id),
-      label: this.nodes.get(name),
-    }
+      label: this.nodes.get(id),
+    };
   }
 
   removeNode(name){
@@ -69,7 +69,7 @@ class Graph {
     else this.edges.get(vertexA).set(vertexB, [edge]);
   }
 
-  addEgde(vertexA, vertexB, weight=1, name="", label=this.edgeDefaultLabel){
+  addEgde(vertexA, vertexB, weight=1, name='', label=this.edgeDefaultLabel){
     if(!this.hasNode(vertexA)) this.addNode(vertexA);
     if(!this.hasNode(vertexB)) this.addNode(vertexB);
     const nodeIdA = this.nodeToId.get(vertexA);
@@ -93,9 +93,7 @@ class Graph {
     for(const keyA of keysA){
       const keysB = this.edges.get(keyA).keys();
       for(const keyB of keysB) {
-        const newArray = this.edges.get(keyA).get(keyB).filter((elem) => {
-          return elem.name === name
-        });
+        const newArray = this.edges.get(keyA).get(keyB).filter(elem => elem.name === name);
         result = [...result, ...newArray];
       }
     }
@@ -128,15 +126,11 @@ class Graph {
   }
 
   removeEdgeById(id){
-    this.removeEdgeByFunc((elem) =>{
-      return elem.__id__ !== id;
-    });
+    this.removeEdgeByFunc(elem => elem.__id__ !== id);
   }
 
   removeEdgeByName(name){
-    this.removeEdgeByFunc((elem) =>{
-      return elem.name !== name;
-    });
+    this.removeEdgeByFunc(elem => elem.name !== name);
   }
 
   setNodeDefaultLabel(label){
