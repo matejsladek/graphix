@@ -1,0 +1,11 @@
+{
+  "extends": "airbnb",
+  "rules": {
+    "no-continue": "off",
+    "keyword-spacing": "off",
+    "space-before-blocks": "off",
+    "no-underscore-dangle": "off",
+    "object-curly-spacing": "off",
+    "space-infix-ops": "off"
+  }
+}
