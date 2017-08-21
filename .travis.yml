@@ -25,6 +25,8 @@ before_install:
 - npm install node-gyp -g
 # install aws-sdk so it is available for publishing
 - npm install aws-sdk
+# update rvm
+- rvm get stable
 # figure out if we should publish
 #- PUBLISH_BINARY=true
 # if we are building a tag then publish
