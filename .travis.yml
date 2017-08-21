@@ -1,0 +1,52 @@
+language: node_js
+
+node_js:
+  - "6"
+  - "8"
+
+env:
+  global:
+  - secure: VLN/R1vQiVt8UcIkzq84OEhsHjztMQ0Uxd8zF5RmlTiCuhT61FMQ4iqpXzTgl5Cg9N51iVUrwA020uKYnB32hyMvjoZ4fMKKYsDeCRQWpEJz8x/cLTwD8MPelBjtGHIxbuZk6TAS+YujWTkngN39gum6R4pbfQQipWwmltptrOXb3Enh2rGJmfijDaduciyxp5j52T33TQzoYzXCWeTatRtqHweby2TFdHsXSSxBXKG5Bn77KNImWZLZ6ZAJVn1QdPmEff1snnpld2XEn4fLvVXtqg5uZKBDBYqhm7HHKpIjlfCFj7mngMIPg95+JQj/L/EZDK+EkLpNrOODB8OsR2bsdiGxYTSU1E6EbA+0LySrkGBzUgL2PP63rc8k4VjbEtE9ycsgtrIY3iGZytWGZVEPNc0XABwepOcOB+sQlC4wr9lJcXcnPoAAEhSfReUxdi3NSb1xzolYz1oT10+1eEq3UACuin82DQW3WfvAWQ7KnnNkVq2Wkw/LAEJC3YYBp9TIouGV2pkCtNtSOvw4yDpDHD04xyGzQ2cdMHFk7tgWQC3ouruKhtcB0ScU+KUudPQOyZTJGUIzII446hJwopMiML+oO0FOYG2LvwiQuCOZBqfW+h6TtU7Lp49FEuZoDsWFdarPOS/fq7bW7H8xHPm/m3L/eQ5Fie0pYDg2Tyk=
+  - secure: dCNT+w0u6IKu4c2n9yZbWSWyTJiupBHIkb9dglFeOC1EM4wDAH6hQPRc90r62LSsxA1UhxkZQajILCQds4B1+bcXdez9uuYlE4JEJem9X8VqriNzzSuPgGkazk6RSSWhecJOd8aSnMJMw1t6x+ZiP2mUuqSB0lOzat8g+7MjPT0rVK2+2udNea31eT5FtZEnbYfKDLeWE0H3qTC7fS9eCZXyjGbpnJG6OdCnQhYQpk7ZtTel/8wvh4xx4oTHBw4ZUdhLVPqBOrH5NgBIZ3dxlk4wCX+6bzCKLslFh0kGu13xknF5XdAeJcF8R2n13UYg1UQMUG9aQoV/BkdM+LjQ8wJFb/yh6T5NbF4JVxduZwKXoiwAgL7wbAsMvUjzyCH6KwM3yGDKLl68ybXX1W9LW5oWagOLSpfyMR9T+0ZhY+PrubJbS7Jje64rNNZT7x4+ENI9RZkp8JAHStCQPVlXYYWC8qWA3kZKqYfwcERIy+hF0476v+vuepqdipURB96WAasoNDGODU6z6yoJBpAynwnD8WzP6Ub9b4tFJtkvKucnZUs1dL/8QCrJDL39g5bvMTPf2gwwiPHaKL6lLTABpCnVvnJ+yTPJFklFTr62YBmz4fw0bEj8AHwRVUx/00L0FhRJPxnNsPUA0PgSZX0wTWbVwPqIVZ/il+RPy1091PU=
+
+before_install:
+# get commit message
+- COMMIT_MESSAGE=$(git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n')
+# put local node-pre-gyp on PATH
+- export PATH=./node_modules/.bin/:$PATH
+# put global node-gyp on PATH
+- npm install node-gyp -g
+# install aws-sdk so it is available for publishing
+- npm install aws-sdk
+# figure out if we should publish
+- PUBLISH_BINARY=true
+# if we are building a tag then publish
+- if [[ $TRAVIS_BRANCH == `git describe --tags --always HEAD` ]]; then PUBLISH_BINARY=true; fi;
+# or if we put [publish binary] in the commit message
+- if test "${COMMIT_MESSAGE#*'[publish binary]'}" != "$COMMIT_MESSAGE"; then PUBLISH_BINARY=true; fi;
+
+install:
+# ensure source install works
+- npm install --build-from-source
+# test our module
+- node index.js
+
+before_script:
+# if publishing, do it
+- if [[ $PUBLISH_BINARY == true ]]; then node-pre-gyp package publish; fi;
+# cleanup
+- node-pre-gyp clean
+- node-gyp clean
+
+script:
+# if publishing, test installing from remote
+- INSTALL_RESULT=0
+- if [[ $PUBLISH_BINARY == true ]]; then INSTALL_RESULT=$(npm install --fallback-to-build=false > /dev/null)$? || true; fi;
+# if install returned non zero (errored) then we first unpublish and then call false so travis will bail at this line
+- if [[ $INSTALL_RESULT != 0 ]]; then echo "returned $INSTALL_RESULT";node-pre-gyp unpublish;false; fi
+# If success then we arrive here so lets clean up
+- node-pre-gyp clean
+
+after_success:
+# if success then query and display all published binaries
+- node-pre-gyp info
