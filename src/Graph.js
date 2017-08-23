@@ -62,6 +62,10 @@ class Graph {
     }
   }
 
+  getAdjList(){
+    return this.edges;
+  }
+
   createEdge(vertexA, vertexB, weight, id){
     if(!this.edges.has(vertexA)) this.edges.set(vertexA, new Map());
     const edge = {__id__: id, weight};
@@ -139,6 +143,27 @@ class Graph {
 
   setEdgeDefaultLabel(label){
     this.edgeDefaultLabel = label;
+  }
+
+  getAdjListArrayBuffer(){
+    let numberOfEdges = 0;
+    this.edges.forEach((val) => {
+      numberOfEdges += val.size;
+    });
+    if(!this.directed) numberOfEdges /= 2;
+    const arraySize = numberOfEdges * 3;
+    const i32a = new Int32Array(arraySize);
+    let index = 0;
+    this.edges.forEach((val, keyA) => {
+      val.forEach((edgesArray, keyB) => {
+        edgesArray.forEach((edgeVal) => {
+          i32a[index++] = keyA;
+          i32a[index++] = keyB;
+          i32a[index++] = edgeVal.weight;
+        });
+      });
+    });
+    return i32a.buffer;
   }
 }
 

@@ -1,11 +1,9 @@
 import { PriorityQueue } from 'es-collections';
 
-function dijkstra(graph, vertexFrom, vertexTo){
-  const start = graph.getNode(vertexFrom).__id__;
-  const finish = graph.getNode(vertexTo).__id__;
+function dijkstraJavascript(graph, start, finish){
   const marked = new Set();
   const pq = new PriorityQueue((a, b) => a.dist - b.dist);
-  const edges = graph.edges;
+  const edges = graph.getAdjList();
   pq.add({name: start, dist: 0});
   while(pq.size !== 0){
     const top = pq.remove();
@@ -23,7 +21,27 @@ function dijkstra(graph, vertexFrom, vertexTo){
       });
     }
   }
-  return Infinity;
+  return -1;
+}
+
+function dijkstraCpp(graph, vertexFrom, vertexTo, resolve){
+  const binding = require('./binding');
+  const dijkstraCppImpl = binding.dijkstra;
+  const edges = graph.getAdjListArrayBuffer();
+  dijkstraCppImpl(edges, vertexFrom, vertexTo, resolve);
+}
+
+function dijkstra(graph, vertexFrom, vertexTo){
+  return new Promise((resolve) => {
+    const start = graph.getNode(vertexFrom).__id__;
+    const finish = graph.getNode(vertexTo).__id__;
+    try{
+      dijkstraCpp(graph, start, finish, resolve);
+    } catch(err){
+      const output = dijkstraJavascript(graph, start, finish);
+      resolve(output);
+    }
+  });
 }
 
 export default dijkstra;

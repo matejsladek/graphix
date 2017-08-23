@@ -1,4 +1,5 @@
 import 'babel-polyfill';
+import { hello } from './binding';
 import Graph from './Graph';
 import dijkstra from './dijkstra';
 
@@ -11,13 +12,5 @@ async function randomFunctionAsync() {
   const values = [3, 5];
   return values.map(a => a * a);
 }
-
-const binary = require('node-pre-gyp');
-const path = require('path');
-
-const bindingPath = binary.find(path.resolve(path.join(__dirname, '../package.json')));
-const binding = require(bindingPath);
-const hello = binding.hello;
-
 
 export { hello, randomFunction, randomFunctionAsync, Graph, dijkstra };
