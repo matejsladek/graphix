@@ -25,6 +25,16 @@ class Graph {
     return this.nodeToId.has(name);
   }
 
+  hasNodeById(id){
+    return this.idToNode.has(id);
+  }
+
+  getNonExistentPoint(){
+    return {
+      __id__: -1,
+    };
+  }
+
   getNodes(){
     const nodes = [];
     for(const id of nodes.keys()){
@@ -34,6 +44,7 @@ class Graph {
   }
 
   getNode(name) {
+    if(!this.hasNode(name)) return this.getNonExistentPoint();
     return {
       __id__: this.nodeToId.get(name),
       name,
@@ -42,6 +53,7 @@ class Graph {
   }
 
   getNodeById(id) {
+    if(!this.hasNodeById(id)) return this.getNonExistentPoint();
     return {
       __id__: id,
       name: this.idToNode.get(id),
@@ -50,6 +62,7 @@ class Graph {
   }
 
   removeNode(name){
+    if(!this.hasNode(name)) return -1;
     const id = this.nodeToId.get(name);
     this.nodes.delete(id);
     this.nodeToId.delete(id);
