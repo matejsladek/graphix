@@ -8,8 +8,7 @@ g.addEgde(3, 4, 2);
 g.addEgde(0, 4, 12);
 
 test('test dijkstra basic', async () => {
-  const res = await dijkstra(g, 0, 4);
-  expect(res).toBe(8);
+  expect(await dijkstra(g, 0, 4)).toBe(8);
 });
 
 test('test dijkstra no route', async () => {
