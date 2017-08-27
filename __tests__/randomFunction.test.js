@@ -9,5 +9,5 @@ test('test randomFunctionAsync', () => {
 });
 
 test('test hello addon', () => {
-  expect(hello()).toBe("world");
+  return hello().then(data => expect(data).toBe('world'));
 });
