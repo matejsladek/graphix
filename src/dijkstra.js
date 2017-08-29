@@ -1,9 +1,25 @@
 import { PriorityQueue } from 'es-collections';
 
+function getInfinityDistances(nodes){
+  const distances = new Map();
+  nodes.forEach(val => distances.set(val, -1));
+  return distances;
+}
+
+function convertDistancesIdsToNames(graph, distances){
+  const result = new Map();
+  distances.forEach((val, key) => {
+    result.set(graph.getNodeById(key).name, val);
+  });
+  return result;
+}
+
 function dijkstraJavascript(graph, start, finish){
   const marked = new Set();
   const pq = new PriorityQueue((a, b) => a.dist - b.dist);
   const edges = graph.getAdjList();
+  const nodes = graph.getNodesIdArray();
+  const distances = getInfinityDistances(nodes);
   pq.add({name: start, dist: 0});
   while(pq.size !== 0){
     const top = pq.remove();
@@ -11,7 +27,8 @@ function dijkstraJavascript(graph, start, finish){
     const currentDist = top.dist;
     if(marked.has(currentName)) continue;
     marked.add(currentName);
-    if(currentName === finish) return top.dist;
+    if(currentName === finish) return currentDist;
+    distances.set(currentName, currentDist);
     if(edges.has(currentName)){
       edges.get(currentName).forEach((value, key) => {
         if(value.length === 0) return;
@@ -21,6 +38,7 @@ function dijkstraJavascript(graph, start, finish){
       });
     }
   }
+  if(finish === -2) return distances;
   return -1;
 }
 
@@ -31,17 +49,32 @@ function dijkstraCpp(graph, vertexFrom, vertexTo, resolve){
   dijkstraCppImpl(edges, vertexFrom, vertexTo, resolve);
 }
 
-function dijkstra(graph, vertexFrom, vertexTo){
+function dijkstraImpl(graph, vertexFrom, vertexTo, all = false){
   return new Promise((resolve) => {
     const start = graph.getNode(vertexFrom).__id__;
     const finish = graph.getNode(vertexTo).__id__;
     try{
-      dijkstraCpp(graph, start, finish, resolve);
+      if(all) throw 'not implemented in c++';
+      else dijkstraCpp(graph, start, finish, resolve);
     } catch(err){
-      const output = dijkstraJavascript(graph, start, finish);
+      let output;
+      if(all){
+        output = dijkstraJavascript(graph, start, -2);
+        output = convertDistancesIdsToNames(graph, output);
+      }
+      else output = dijkstraJavascript(graph, start, finish);
       resolve(output);
     }
   });
 }
 
-export default dijkstra;
+function dijkstra(graph, vertexFrom, vertexTo){
+  return dijkstraImpl(graph, vertexFrom, vertexTo, false);
+}
+
+function dijkstraAll(graph, vertexFrom){
+  return dijkstraImpl(graph, vertexFrom, -1, true);
+}
+
+
+export { dijkstra, dijkstraAll };

@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import Graph from './Graph';
-import dijkstra from './dijkstra';
+import { dijkstra, dijkstraAll } from './dijkstra';
 import hello from './hello';
 
 function randomFunction() {
@@ -13,4 +13,4 @@ async function randomFunctionAsync() {
   return values.map(a => a * a);
 }
 
-export { hello, randomFunction, randomFunctionAsync, Graph, dijkstra };
+export { hello, randomFunction, randomFunctionAsync, Graph, dijkstra, dijkstraAll };

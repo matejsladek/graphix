@@ -79,6 +79,14 @@ class Graph {
     return this.edges;
   }
 
+  getNodesIdArray(){
+    const nodes = [];
+    this.nodes.forEach((val, key) => {
+      nodes.push(key);
+    });
+    return nodes;
+  }
+
   createEdge(vertexA, vertexB, weight, id){
     if(!this.edges.has(vertexA)) this.edges.set(vertexA, new Map());
     const edge = {__id__: id, weight};
