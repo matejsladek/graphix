@@ -26,7 +26,6 @@ function dijkstraJavascript(graph, start, finish){
   const marked = new Set();
   const pq = new PriorityQueue((a, b) => a.dist - b.dist);
   const edges = graph.getAdjList();
-  const nodes = graph.getNodesIdArray();
   const distances = new Map();
   pq.add({name: start, dist: 0});
   while(pq.size !== 0){
@@ -60,7 +59,7 @@ function dijkstraCpp(graph, vertexFrom, vertexTo){
 }
 
 function transformArrayBufferToMap(){
-  return [];
+  return new Map();
 }
 
 function dijkstraImpl(graph, vertexFrom, vertexTo, all = false){
@@ -69,12 +68,15 @@ function dijkstraImpl(graph, vertexFrom, vertexTo, all = false){
     const finish = graph.getNode(vertexTo).__id__;
     try{
       let futureOutput;
-      throw '12';
-      if(all) throw 'not implemented in c++';
-      else futureOutput = dijkstraCpp(graph, start, finish);
-      // const output = await futureOutput;
-      futureOutput.then(result => resolve(transformArrayBufferToMap(result)));
-      // resolve(transformArrayBufferToMap(output));
+      if(all) {
+        // throw 'not implemented in c++';
+        futureOutput = dijkstraCpp(graph, start, -2);
+        futureOutput.then(result => resolve(convertDistancesIdsToNames(graph, fillInfinityDistances(graph, transformArrayBufferToMap(result)))));
+      }
+      else {
+        futureOutput = dijkstraCpp(graph, start, finish);
+        futureOutput.then(result => resolve(convertDistancesIdsToNames(graph, transformArrayBufferToMap(result))));
+      }
     } catch(err){
       let output;
       if(all) output = fillInfinityDistances(graph, dijkstraJavascript(graph, start, -2));

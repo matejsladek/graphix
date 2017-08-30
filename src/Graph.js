@@ -32,6 +32,8 @@ class Graph {
   getNonExistentPoint(){
     return {
       __id__: -1,
+      name: -1,
+      label: '',
     };
   }
 
@@ -73,6 +75,7 @@ class Graph {
     for(const key of keys){
       this.edges.get(key).delete(id);
     }
+    return 0;
   }
 
   getAdjList(){
