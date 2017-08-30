@@ -94,7 +94,7 @@ class Graph {
     else this.edges.get(vertexA).set(vertexB, [edge]);
   }
 
-  addEgde(vertexA, vertexB, weight=1, name='', label=this.edgeDefaultLabel){
+  addEdge(vertexA, vertexB, weight=1, name='', label=this.edgeDefaultLabel){
     if(!this.hasNode(vertexA)) this.addNode(vertexA);
     if(!this.hasNode(vertexB)) this.addNode(vertexB);
     const nodeIdA = this.nodeToId.get(vertexA);

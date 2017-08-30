@@ -61,8 +61,7 @@ function dijkstraImpl(graph, vertexFrom, vertexTo, all = false){
       if(all){
         output = dijkstraJavascript(graph, start, -2);
         output = convertDistancesIdsToNames(graph, output);
-      }
-      else output = dijkstraJavascript(graph, start, finish);
+      } else output = dijkstraJavascript(graph, start, finish);
       resolve(output);
     }
   });
