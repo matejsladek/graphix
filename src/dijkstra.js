@@ -6,6 +6,14 @@ function getInfinityDistances(nodes){
   return distances;
 }
 
+function fillInfinityDistances(graph, result){
+  const nodes = graph.getNodesIdArray();
+  nodes.forEach(val => {
+    if(!result.has(val)) result.set(val, -1);
+  });
+  return result;
+}
+
 function convertDistancesIdsToNames(graph, distances){
   const result = new Map();
   distances.forEach((val, key) => {
@@ -19,7 +27,7 @@ function dijkstraJavascript(graph, start, finish){
   const pq = new PriorityQueue((a, b) => a.dist - b.dist);
   const edges = graph.getAdjList();
   const nodes = graph.getNodesIdArray();
-  const distances = getInfinityDistances(nodes);
+  const distances = new Map();
   pq.add({name: start, dist: 0});
   while(pq.size !== 0){
     const top = pq.remove();
@@ -69,7 +77,7 @@ function dijkstraImpl(graph, vertexFrom, vertexTo, all = false){
       // resolve(transformArrayBufferToMap(output));
     } catch(err){
       let output;
-      if(all) output = dijkstraJavascript(graph, start, -2);
+      if(all) output = fillInfinityDistances(graph, dijkstraJavascript(graph, start, -2));
       else output = dijkstraJavascript(graph, start, finish);
       output = convertDistancesIdsToNames(graph, output);
       resolve(output);
