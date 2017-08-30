@@ -9,6 +9,8 @@ test('test dijkstraAll basic', async () => {
     [2, 4],
     [3, 6],
     [4, 8],
+    [5, -1],
+    [6, -1],
   ]);
   expect(result).toEqual(resultShould);
 });

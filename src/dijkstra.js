@@ -27,7 +27,7 @@ function dijkstraJavascript(graph, start, finish){
     const currentDist = top.dist;
     if(marked.has(currentName)) continue;
     marked.add(currentName);
-    if(currentName === finish) return currentDist;
+    if(currentName === finish) return new Map([[currentName, currentDist]]);
     distances.set(currentName, currentDist);
     if(edges.has(currentName)){
       edges.get(currentName).forEach((value, key) => {
@@ -39,14 +39,20 @@ function dijkstraJavascript(graph, start, finish){
     }
   }
   if(finish === -2) return distances;
-  return -1;
+  return new Map([[finish, -1]]);
 }
 
-function dijkstraCpp(graph, vertexFrom, vertexTo, resolve){
-  const binding = require('./binding');
-  const dijkstraCppImpl = binding.dijkstra;
-  const edges = graph.getAdjListArrayBuffer();
-  dijkstraCppImpl(edges, vertexFrom, vertexTo, resolve);
+function dijkstraCpp(graph, vertexFrom, vertexTo){
+  return new Promise((resolve) => {
+    const binding = require('./binding');
+    const dijkstraCppImpl = binding.dijkstra;
+    const edges = graph.getAdjListArrayBuffer();
+    dijkstraCppImpl(edges, vertexFrom, vertexTo, resolve);
+  });
+}
+
+function transformArrayBufferToMap(){
+  return [];
 }
 
 function dijkstraImpl(graph, vertexFrom, vertexTo, all = false){
@@ -54,14 +60,18 @@ function dijkstraImpl(graph, vertexFrom, vertexTo, all = false){
     const start = graph.getNode(vertexFrom).__id__;
     const finish = graph.getNode(vertexTo).__id__;
     try{
+      let futureOutput;
+      throw '12';
       if(all) throw 'not implemented in c++';
-      else dijkstraCpp(graph, start, finish, resolve);
+      else futureOutput = dijkstraCpp(graph, start, finish);
+      // const output = await futureOutput;
+      futureOutput.then(result => resolve(transformArrayBufferToMap(result)));
+      // resolve(transformArrayBufferToMap(output));
     } catch(err){
       let output;
-      if(all){
-        output = dijkstraJavascript(graph, start, -2);
-        output = convertDistancesIdsToNames(graph, output);
-      } else output = dijkstraJavascript(graph, start, finish);
+      if(all) output = dijkstraJavascript(graph, start, -2);
+      else output = dijkstraJavascript(graph, start, finish);
+      output = convertDistancesIdsToNames(graph, output);
       resolve(output);
     }
   });

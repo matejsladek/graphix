@@ -2,13 +2,19 @@ import { dijkstra} from '../src/index';
 import { basicGraph } from '../src/test-graphs';
 
 test('test dijkstra basic', async () => {
-  expect(await dijkstra(basicGraph, 0, 4)).toBe(8);
+  const finish = 4;
+  const result = await dijkstra(basicGraph, 0, finish);
+  expect(result).toEqual(new Map([[finish, 8]]));
 });
 
 test('test dijkstra no route', async () => {
-  expect(await dijkstra(basicGraph, 0, 5)).toBe(-1);
+  const finish = 5;
+  const result = await dijkstra(basicGraph, 0, finish);
+  expect(result).toEqual(new Map([[finish, -1]]));
 });
 
 test('test dijkstra same start and end', async () => {
-  expect(await dijkstra(basicGraph, 0, 0)).toBe(0);
+  const finish = 0;
+  const result = await dijkstra(basicGraph, 0, finish);
+  expect(result).toEqual(new Map([[finish, 0]]));
 });
