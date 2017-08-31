@@ -2,6 +2,8 @@
 #include <iostream>
 #include <queue>
 #include <set>
+#include <vector>
+#include <utility>
 #include "dijkstra.hpp"
 
 napi_value Dijkstra(napi_env env, napi_callback_info info) {
