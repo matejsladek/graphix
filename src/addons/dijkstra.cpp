@@ -34,10 +34,20 @@ napi_value Dijkstra(napi_env env, napi_callback_info info) {
         i += 2;
     }
 
-    int res = DijkstraImpl(adj, from, to);
-
+    std::vector<std::pair<int, int > > res = DijkstraImpl(adj, from, to);
+    int sz = res.size() * 2;
+    void *output;
+    output = malloc(sz * sizeof(int32_t));
     napi_value argv[1];
-    status = napi_create_int32(env, res, argv);
+//    status = napi_create_int32(env, res, argv);
+    status = napi_create_arraybuffer(env, sz * sizeof(int32_t), &output, argv);
+
+    auto realOutput = static_cast<int*> (output);
+
+    for (int i = 0; i < (int)res.size(); ++i) {
+        realOutput[i*2] = res[i].first;
+        realOutput[i*2+1] = res[i].second;
+    }
 
     napi_value global;
     status = napi_get_global(env, &global);
@@ -48,7 +58,8 @@ napi_value Dijkstra(napi_env env, napi_callback_info info) {
     return result;
 }
 
-int DijkstraImpl(std::map<int, std::map<int, int> > adj, int from, int to) {
+std::vector<std::pair<int, int > > DijkstraImpl(std::map<int, std::map<int, int> > adj, int from, int to) {
+    std::vector<std::pair<int, int > > distances;
     std::priority_queue<std::pair<int,int>, std::vector<std::pair<int,int>>, std::greater<std::pair<int,int>> > pq;
     std::set<int> marked;
     pq.push({from, 0});
@@ -57,14 +68,16 @@ int DijkstraImpl(std::map<int, std::map<int, int> > adj, int from, int to) {
         pq.pop();
         int currentPoint = tp.first;
         int currentDist = tp.second;
-        if(currentPoint == to) return currentDist;
+        if(currentPoint == to) return std::vector<std::pair<int, int > > {{to, currentDist}};
         if(marked.count(currentPoint) > 0) continue;
         marked.insert(currentPoint);
+        distances.push_back({to, currentDist});
         for (auto c: adj[currentPoint]){
             int nextPoint = c.first;
             int nextDist = c.second;
             pq.push({nextPoint, currentDist + nextDist});
         }
     }
-    return -1;
+    if(to == -2) return distances;
+    return std::vector<std::pair<int, int > > {{to, -1}};
 }

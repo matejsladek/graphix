@@ -1,4 +1,4 @@
-import { Graph } from '../src/index';
+import { Graph } from './index';
 
 const basicGraph = new Graph();
 basicGraph.addEdge(0, 1, 2);

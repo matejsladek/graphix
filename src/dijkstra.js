@@ -58,8 +58,13 @@ function dijkstraCpp(graph, vertexFrom, vertexTo){
   });
 }
 
-function transformArrayBufferToMap(){
-  return new Map();
+function transformArrayBufferToMap(arrayBuffer){
+  const arr = new Int32Array(arrayBuffer);
+  const res = new Map();
+  for(let i = 0; i < arr.length; i+=2){
+    res.set(arr[i], arr[i+1]);
+  }
+  return res;
 }
 
 function dijkstraImpl(graph, vertexFrom, vertexTo, all = false){
@@ -69,11 +74,17 @@ function dijkstraImpl(graph, vertexFrom, vertexTo, all = false){
     try{
       let futureOutput;
       if(all) {
-        // throw 'not implemented in c++';
         futureOutput = dijkstraCpp(graph, start, -2);
-        futureOutput.then(result => resolve(convertDistancesIdsToNames(graph, fillInfinityDistances(graph, transformArrayBufferToMap(result)))));
-      }
-      else {
+        futureOutput.then(result => {
+          resolve(
+            convertDistancesIdsToNames(
+              graph, fillInfinityDistances(
+                graph, transformArrayBufferToMap(result),
+              ),
+            ),
+          );
+        });
+      } else {
         futureOutput = dijkstraCpp(graph, start, finish);
         futureOutput.then(result => resolve(convertDistancesIdsToNames(graph, transformArrayBufferToMap(result))));
       }
