@@ -1,4 +1,7 @@
 {
+  "env": {
+    "jest": true
+  },
   "extends": "airbnb",
   "rules": {
     "no-continue": "off",
@@ -6,6 +9,9 @@
     "space-before-blocks": "off",
     "no-underscore-dangle": "off",
     "object-curly-spacing": "off",
-    "space-infix-ops": "off"
+    "space-infix-ops": "off",
+    "no-plusplus": "off",
+    "no-console": "off",
+    "class-methods-use-this": "off"
   }
 }

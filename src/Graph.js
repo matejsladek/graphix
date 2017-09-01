@@ -25,6 +25,18 @@ class Graph {
     return this.nodeToId.has(name);
   }
 
+  hasNodeById(id){
+    return this.idToNode.has(id);
+  }
+
+  getNonExistentPoint(){
+    return {
+      __id__: -1,
+      name: -1,
+      label: '',
+    };
+  }
+
   getNodes(){
     const nodes = [];
     for(const id of nodes.keys()){
@@ -34,6 +46,7 @@ class Graph {
   }
 
   getNode(name) {
+    if(!this.hasNode(name)) return this.getNonExistentPoint();
     return {
       __id__: this.nodeToId.get(name),
       name,
@@ -42,6 +55,7 @@ class Graph {
   }
 
   getNodeById(id) {
+    if(!this.hasNodeById(id)) return this.getNonExistentPoint();
     return {
       __id__: id,
       name: this.idToNode.get(id),
@@ -50,6 +64,7 @@ class Graph {
   }
 
   removeNode(name){
+    if(!this.hasNode(name)) return -1;
     const id = this.nodeToId.get(name);
     this.nodes.delete(id);
     this.nodeToId.delete(id);
@@ -60,6 +75,19 @@ class Graph {
     for(const key of keys){
       this.edges.get(key).delete(id);
     }
+    return 0;
+  }
+
+  getAdjList(){
+    return this.edges;
+  }
+
+  getNodesIdArray(){
+    const nodes = [];
+    this.nodes.forEach((val, key) => {
+      nodes.push(key);
+    });
+    return nodes;
   }
 
   createEdge(vertexA, vertexB, weight, id){
@@ -69,7 +97,7 @@ class Graph {
     else this.edges.get(vertexA).set(vertexB, [edge]);
   }
 
-  addEgde(vertexA, vertexB, weight=1, name='', label=this.edgeDefaultLabel){
+  addEdge(vertexA, vertexB, weight=1, name='', label=this.edgeDefaultLabel){
     if(!this.hasNode(vertexA)) this.addNode(vertexA);
     if(!this.hasNode(vertexB)) this.addNode(vertexB);
     const nodeIdA = this.nodeToId.get(vertexA);
@@ -139,6 +167,27 @@ class Graph {
 
   setEdgeDefaultLabel(label){
     this.edgeDefaultLabel = label;
+  }
+
+  getAdjListArrayBuffer(){
+    let numberOfEdges = 0;
+    this.edges.forEach((val) => {
+      numberOfEdges += val.size;
+    });
+    if(!this.directed) numberOfEdges /= 2;
+    const arraySize = numberOfEdges * 3;
+    const i32a = new Int32Array(arraySize);
+    let index = 0;
+    this.edges.forEach((val, keyA) => {
+      val.forEach((edgesArray, keyB) => {
+        edgesArray.forEach((edgeVal) => {
+          i32a[index++] = keyA;
+          i32a[index++] = keyB;
+          i32a[index++] = edgeVal.weight;
+        });
+      });
+    });
+    return i32a.buffer;
   }
 }
 
