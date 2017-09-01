@@ -71,7 +71,7 @@ std::vector<std::pair<int, int > > DijkstraImpl(std::map<int, std::map<int, int>
         if(currentPoint == to) return std::vector<std::pair<int, int > > {{to, currentDist}};
         if(marked.count(currentPoint) > 0) continue;
         marked.insert(currentPoint);
-        distances.push_back({to, currentDist});
+        distances.push_back({currentPoint, currentDist});
         for (auto c: adj[currentPoint]){
             int nextPoint = c.first;
             int nextDist = c.second;
