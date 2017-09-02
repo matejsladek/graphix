@@ -21,7 +21,7 @@ console.log('distance from 0 -> 4', result.get(finish));
   benchmark via https://github.com/matejsladek/graph-benchmark.js   
   graph of NY roads from http://www.dis.uniroma1.it/challenge9/download.shtml (264 346 vertices; 733 846 edges)
   ```
-  USA-road-NY Graphlib x 0.30 ops/sec ±18.52% (5 runs sampled)
-  USA-road-NY Graphix x 0.44 ops/sec ±18.70% (7 runs sampled)
+  USA-road-NY Graphlib x 0.32 ops/sec ±22.53% (5 runs sampled)
+  USA-road-NY Graphix x 0.65 ops/sec ±25.14% (8 runs sampled)
   Fastest is USA-road-NY Graphix
   ```
