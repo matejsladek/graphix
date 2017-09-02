@@ -1,5 +1,10 @@
 import { PriorityQueue } from 'es-collections';
 
+let binding;
+try{
+  binding = require('./binding');
+} catch(err){}
+
 function getInfinityDistances(nodes){
   const distances = new Map();
   nodes.forEach(val => distances.set(val, -1));
@@ -51,7 +56,6 @@ function dijkstraJavascript(graph, start, finish){
 
 function dijkstraCpp(graph, vertexFrom, vertexTo){
   return new Promise((resolve) => {
-    const binding = require('./binding');
     const dijkstraCppImpl = binding.dijkstra;
     const edges = graph.getAdjListArrayBuffer();
     dijkstraCppImpl(edges, vertexFrom, vertexTo, resolve);
