@@ -55,12 +55,12 @@ napi_value Dijkstra(napi_env env, napi_callback_info info) {
 void DijkstraImpl(std::unordered_map<int, std::vector<std::pair<int, int>>>& adj, int from, int to, std::vector<int>& distances) {
     std::priority_queue<std::pair<int,int>, std::vector<std::pair<int,int>>, std::greater<std::pair<int,int>>> pq;
     std::unordered_set<int> marked;
-    pq.push({from, 0});
+    pq.push({0, from});
     while(!pq.empty()){
         auto tp = pq.top();
         pq.pop();
-        int currentPoint = tp.first;
-        int currentDist = tp.second;
+        int currentPoint = tp.second;
+        int currentDist = tp.first;
         if(currentPoint == to) {
             distances.clear();
             distances.push_back(to);
@@ -74,7 +74,7 @@ void DijkstraImpl(std::unordered_map<int, std::vector<std::pair<int, int>>>& adj
         for (auto c: adj[currentPoint]){
             int nextPoint = c.first;
             int nextDist = c.second;
-            if(marked.count(nextPoint) == 0) pq.push({nextPoint, currentDist + nextDist});
+            if(marked.count(nextPoint) == 0) pq.push({currentDist + nextDist, nextPoint});
         }
     }
     if(to == -2) return;
