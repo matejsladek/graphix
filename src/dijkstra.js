@@ -68,25 +68,22 @@ function transformArrayBufferToMap(arrayBuffer){
 }
 
 function dijkstraImpl(graph, vertexFrom, vertexTo, all = false){
-  return new Promise((resolve) => {
+  return new Promise(async (resolve) => {
     const start = graph.getNode(vertexFrom).__id__;
     const finish = graph.getNode(vertexTo).__id__;
     try{
-      let futureOutput;
       if(all) {
-        futureOutput = dijkstraCpp(graph, start, -2);
-        futureOutput.then(result => {
-          resolve(
-            convertDistancesIdsToNames(
-              graph, fillInfinityDistances(
-                graph, transformArrayBufferToMap(result),
-              ),
+        const result = await dijkstraCpp(graph, start, -2);
+        resolve(
+          convertDistancesIdsToNames(
+            graph, fillInfinityDistances(
+              graph, transformArrayBufferToMap(result),
             ),
-          );
-        });
+          ),
+        );
       } else {
-        futureOutput = dijkstraCpp(graph, start, finish);
-        futureOutput.then(result => resolve(convertDistancesIdsToNames(graph, transformArrayBufferToMap(result))));
+        const result = await dijkstraCpp(graph, start, finish);
+        resolve(convertDistancesIdsToNames(graph, transformArrayBufferToMap(result)));
       }
     } catch(err){
       let output;
